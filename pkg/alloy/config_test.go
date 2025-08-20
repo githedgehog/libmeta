@@ -248,8 +248,22 @@ func TestConfigRender(t *testing.T) {
 						},
 					},
 				},
-				LogFiles: []string{
-					"/var/log/syslog",
+				LogFiles: map[string]alloy.LogFile{
+					"syslog": {
+						PathTargets: []alloy.LogFilePathTarget{
+							{
+								Path: "/var/log/syslog",
+							},
+						},
+					},
+					"varlog": {
+						PathTargets: []alloy.LogFilePathTarget{
+							{
+								Path:        "/var/log/*.log",
+								PathExclude: "/var/log/agent.log",
+							},
+						},
+					},
 				},
 				Kube: alloy.Kube{
 					PodLogs: true,
@@ -279,8 +293,14 @@ func TestConfigRender(t *testing.T) {
 						},
 					},
 				},
-				LogFiles: []string{
-					"/var/log/syslog",
+				LogFiles: map[string]alloy.LogFile{
+					"syslog": {
+						PathTargets: []alloy.LogFilePathTarget{
+							{
+								Path: "/var/log/syslog",
+							},
+						},
+					},
 				},
 				Kube: alloy.Kube{
 					PodLogs: true,

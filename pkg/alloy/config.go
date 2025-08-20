@@ -17,9 +17,9 @@ type Config struct {
 	Targets  Targets `json:"targets,omitempty"`
 	ProxyURL string  `json:"proxyURL,omitempty"`
 
-	Scrapes  map[string]Scrape `json:"scrapes,omitempty"`
-	LogFiles []string          `json:"logFiles,omitempty"`
-	Kube     Kube              `json:"kube,omitempty"`
+	Scrapes  map[string]Scrape  `json:"scrapes,omitempty"`
+	LogFiles map[string]LogFile `json:"logFiles,omitempty"`
+	Kube     Kube               `json:"kube,omitempty"`
 }
 
 // +kubebuilder:object:generate=true
@@ -55,6 +55,17 @@ type ScrapeRelabelRule struct {
 }
 
 // +kubebuilder:object:generate=true
+type LogFile struct {
+	PathTargets []LogFilePathTarget `json:"pathTargets,omitempty"`
+}
+
+// +kubebuilder:object:generate=true
+type LogFilePathTarget struct {
+	Path        string `json:"path,omitempty"`
+	PathExclude string `json:"pathExclude,omitempty"`
+}
+
+// +kubebuilder:object:generate=true
 type Kube struct {
 	PodLogs bool `json:"podLogs,omitempty"`
 	Events  bool `json:"events,omitempty"`
@@ -76,6 +87,12 @@ func (cfg *Config) Validate() error {
 
 		if err := scrape.Validate(); err != nil {
 			return fmt.Errorf("invalid scrape %q: %w", name, err)
+		}
+	}
+
+	for name := range cfg.LogFiles {
+		if err := validateIdentifier(name); err != nil {
+			return fmt.Errorf("invalid log file name %q: %w", name, err)
 		}
 	}
 

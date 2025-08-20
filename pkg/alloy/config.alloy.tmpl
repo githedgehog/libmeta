@@ -125,24 +125,39 @@ prometheus.relabel "{{ $name }}" {
 {{/* Configure log files and k8s events/podlogs only if there are Loki targets */}}
 {{ if len $.Targets.Loki }}
 
-{{ if len $.LogFiles }}
-local.file_match "logfiles" {
-  path_targets = [{
-    {{ range $file := $.LogFiles }}
-    __path__ = "{{ $file }}",
+{{ range $name, $logFile := $.LogFiles }}
+local.file_match "{{ $name }}" {
+  path_targets = [
+    {{ range $file := $logFile.PathTargets }}
+    {
+      __path__ = "{{ $file.Path }}",
+      {{ if $file.PathExclude }}__path_exclude = "{{ $file.PathExclude }}",{{ end }}
+    },
     {{ end }}
-  }]
+  ]
 }
 
-loki.source.file "logfiles" {
-  targets    = local.file_match.logfiles.targets
+loki.source.file "{{ $name }}" {
+  targets    = local.file_match.{{ $name }}.targets
+  forward_to = [
+    loki.process.{{ $name }}.receiver,
+  ]
+}
+
+loki.process "{{ $name }}" {
+  stage.labels {
+    values = {
+      name = "{{ $name }}",
+    }
+  }
+
   forward_to = [
     {{ range $name, $target := $.Targets.Loki }}
     loki.write.{{ $name }}.receiver,
     {{ end }}
   ]
 }
-{{ end }}{{/* if log files */}}
+{{ end }}{{/* range log files */}}
 
 {{ if $.Kube.PodLogs }}
 discovery.kubernetes "pod" {

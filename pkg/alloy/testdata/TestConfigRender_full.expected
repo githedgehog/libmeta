@@ -147,13 +147,50 @@ prometheus.relabel "test_unix" {
     prometheus.remote_write.grafana_cloud_interval.receiver,
   ]
 }
-local.file_match "logfiles" {
-  path_targets = [{
-    __path__ = "/var/log/syslog",
-  }]
+local.file_match "syslog" {
+  path_targets = [
+    {
+      __path__ = "/var/log/syslog",
+    },
+  ]
 }
-loki.source.file "logfiles" {
-  targets    = local.file_match.logfiles.targets
+loki.source.file "syslog" {
+  targets    = local.file_match.syslog.targets
+  forward_to = [
+    loki.process.syslog.receiver,
+  ]
+}
+loki.process "syslog" {
+  stage.labels {
+    values = {
+      name = "syslog",
+    }
+  }
+  forward_to = [
+    loki.write.another.receiver,
+    loki.write.grafana_cloud.receiver,
+  ]
+}
+local.file_match "varlog" {
+  path_targets = [
+    {
+      __path__ = "/var/log/*.log",
+      __path_exclude = "/var/log/agent.log",
+    },
+  ]
+}
+loki.source.file "varlog" {
+  targets    = local.file_match.varlog.targets
+  forward_to = [
+    loki.process.varlog.receiver,
+  ]
+}
+loki.process "varlog" {
+  stage.labels {
+    values = {
+      name = "varlog",
+    }
+  }
   forward_to = [
     loki.write.another.receiver,
     loki.write.grafana_cloud.receiver,
