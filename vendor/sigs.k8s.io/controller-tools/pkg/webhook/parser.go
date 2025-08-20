@@ -28,9 +28,10 @@ import (
 	"strings"
 
 	admissionregv1 "k8s.io/api/admissionregistration/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/sets"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-tools/pkg/genall"
 	"sigs.k8s.io/controller-tools/pkg/markers"
 )
@@ -440,7 +441,6 @@ func (Generator) RegisterMarkers(into *markers.Registry) error {
 	return nil
 }
 
-//gocyclo:ignore
 func (g Generator) Generate(ctx *genall.GenerationContext) error {
 	supportedWebhookVersions := supportedWebhookVersions()
 	mutatingCfgs := make(map[string][]admissionregv1.MutatingWebhook, len(supportedWebhookVersions))
@@ -455,7 +455,7 @@ func (g Generator) Generate(ctx *genall.GenerationContext) error {
 		}
 
 		webhookCfgs := markerSet[WebhookConfigDefinition.Name]
-		hasValidatingWebhookConfig, hasMutatingWebhookConfig := false, false
+		var hasValidatingWebhookConfig, hasMutatingWebhookConfig bool = false, false
 		for _, webhookCfg := range webhookCfgs {
 			webhookCfg := webhookCfg.(WebhookConfig)
 
