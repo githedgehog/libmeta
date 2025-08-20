@@ -1,0 +1,70 @@
+prometheus.remote_write "another" {
+  endpoint {
+    url = "https://another.com/prom/push"
+    bearer_token = "secret"
+    tls_config {
+      insecure_skip_verify = true
+    }
+  }
+  external_labels = {
+  }
+}
+prometheus.remote_write "grafana_cloud" {
+  endpoint {
+    url = "https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom/push"
+    basic_auth {
+      username = "username"
+      password = "password"
+    }
+    tls_config {
+      insecure_skip_verify = false
+    }
+  }
+  external_labels = {
+    a = "b",
+  }
+}
+prometheus.remote_write "grafana_cloud_interval" {
+  endpoint {
+    url = "https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom/push"
+    basic_auth {
+      username = "username"
+      password = "password"
+    }
+    tls_config {
+      insecure_skip_verify = false
+    }
+    metadata_config {
+      send_interval = "42s"
+    }
+  }
+  external_labels = {
+    a = "b",
+  }
+}
+loki.write "another" {
+  endpoint {
+    url = "https://another.com/loki/push"
+    bearer_token = "secret"
+    tls_config {
+      insecure_skip_verify = true
+    }
+  }
+  external_labels = {
+  }
+}
+loki.write "grafana_cloud" {
+  endpoint {
+    url = "https://logs-prod-021.grafana.net/loki/api/v1/push"
+    basic_auth {
+      username = "username"
+      password = "password"
+    }
+    tls_config {
+      insecure_skip_verify = false
+    }
+  }
+  external_labels = {
+    a = "b",
+  }
+}

@@ -1,0 +1,80 @@
+prometheus.remote_write "another" {
+  endpoint {
+    url = "https://another.com/prom/push"
+    proxy_url = "the-proxy"
+    bearer_token = "secret"
+    tls_config {
+      insecure_skip_verify = true
+    }
+  }
+  external_labels = {
+    hostname = "node-1",
+  }
+}
+prometheus.remote_write "grafana_cloud" {
+  endpoint {
+    url = "https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom/push"
+    proxy_url = "the-proxy"
+    basic_auth {
+      username = "username"
+      password = "password"
+    }
+    tls_config {
+      insecure_skip_verify = false
+    }
+  }
+  external_labels = {
+    hostname = "node-1",
+    a = "b",
+  }
+}
+prometheus.remote_write "grafana_cloud_interval" {
+  endpoint {
+    url = "https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom/push"
+    proxy_url = "the-proxy"
+    basic_auth {
+      username = "username"
+      password = "password"
+    }
+    tls_config {
+      insecure_skip_verify = false
+    }
+    metadata_config {
+      send_interval = "42s"
+    }
+  }
+  external_labels = {
+    hostname = "node-1",
+    a = "b",
+  }
+}
+loki.write "another" {
+  endpoint {
+    url = "https://another.com/loki/push"
+    proxy_url = "the-proxy"
+    bearer_token = "secret"
+    tls_config {
+      insecure_skip_verify = true
+    }
+  }
+  external_labels = {
+    hostname = "node-1",
+  }
+}
+loki.write "grafana_cloud" {
+  endpoint {
+    url = "https://logs-prod-021.grafana.net/loki/api/v1/push"
+    proxy_url = "the-proxy"
+    basic_auth {
+      username = "username"
+      password = "password"
+    }
+    tls_config {
+      insecure_skip_verify = false
+    }
+  }
+  external_labels = {
+    hostname = "node-1",
+    a = "b",
+  }
+}
