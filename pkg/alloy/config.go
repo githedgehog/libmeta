@@ -12,35 +12,35 @@ import (
 )
 
 type Config struct {
-	Hostname string
-	Targets  Targets
-	ProxyURL string
+	Hostname string  `json:"hostname,omitempty"`
+	Targets  Targets `json:"targets,omitempty"`
+	ProxyURL string  `json:"proxyURL,omitempty"`
 
-	Scrapes  map[string]Scrape
-	LogFiles []string
-	Kube     Kube
+	Scrapes  map[string]Scrape `json:"scrapes,omitempty"`
+	LogFiles []string          `json:"logFiles,omitempty"`
+	Kube     Kube              `json:"kube,omitempty"`
 }
 
 type Scrape struct {
-	IntervalSeconds uint
+	IntervalSeconds uint `json:"intervalSeconds,omitempty"`
 
-	Address string
-	Self    ScrapeSelf
-	Unix    ScrapeUnix
+	Address string     `json:"address,omitempty"`
+	Self    ScrapeSelf `json:"self,omitempty"`
+	Unix    ScrapeUnix `json:"unix,omitempty"`
 }
 
 type ScrapeSelf struct {
-	Enable bool
+	Enable bool `json:"enable,omitempty"`
 }
 
 type ScrapeUnix struct {
-	Enable     bool
-	Collectors []string
+	Enable     bool     `json:"enable,omitempty"`
+	Collectors []string `json:"collectors,omitempty"`
 }
 
 type Kube struct {
-	PodLogs bool
-	Events  bool
+	PodLogs bool `json:"podLogs,omitempty"`
+	Events  bool `json:"events,omitempty"`
 }
 
 func (cfg *Config) Validate() error {
