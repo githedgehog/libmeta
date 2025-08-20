@@ -1,3 +1,11 @@
+logging {
+    level = "debug"
+    format = "logfmt"
+    write_to = [
+      loki.write.another.receiver,
+      loki.write.grafana_cloud.receiver,
+    ]
+}
 prometheus.remote_write "another" {
   endpoint {
     url = "https://another.com/prom/push"

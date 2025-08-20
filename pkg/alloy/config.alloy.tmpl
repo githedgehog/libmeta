@@ -1,3 +1,15 @@
+logging {
+    level = "debug"
+    format = "logfmt"
+    {{ if len $.Targets.Loki }}
+    write_to = [
+      {{ range $name, $target := $.Targets.Loki }}
+      loki.write.{{ $name }}.receiver,
+      {{ end }}
+    ]
+    {{ end }}
+}
+
 {{ range $name, $target := $.Targets.Prometheus }}
 prometheus.remote_write "{{ $name }}" {
   endpoint {
