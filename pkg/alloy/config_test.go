@@ -216,6 +216,24 @@ func TestConfigRender(t *testing.T) {
 						IntervalSeconds: 42,
 						Address:         "localhost:12345",
 					},
+					"test_relabel": {
+						IntervalSeconds: 42,
+						Address:         "localhost:12345",
+						Relabel: []alloy.ScrapeRelabelRule{
+							{
+								SourceLabels: []string{"l1", "l2"},
+								TargetLabel:  "t1",
+								Separator:    ";",
+								Replacement:  "$1",
+								Regex:        "r2",
+								Action:       "drop",
+							},
+							{
+								SourceLabels: []string{"l1"},
+								Action:       "drop",
+							},
+						},
+					},
 					"test_self": {
 						IntervalSeconds: 43,
 						Self: alloy.ScrapeSelf{

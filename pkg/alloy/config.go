@@ -29,6 +29,8 @@ type Scrape struct {
 	Address string     `json:"address,omitempty"`
 	Self    ScrapeSelf `json:"self,omitempty"`
 	Unix    ScrapeUnix `json:"unix,omitempty"`
+
+	Relabel []ScrapeRelabelRule `json:"relabel,omitempty"`
 }
 
 // +kubebuilder:object:generate=true
@@ -40,6 +42,16 @@ type ScrapeSelf struct {
 type ScrapeUnix struct {
 	Enable     bool     `json:"enable,omitempty"`
 	Collectors []string `json:"collectors,omitempty"`
+}
+
+// +kubebuilder:object:generate=true
+type ScrapeRelabelRule struct {
+	SourceLabels []string `json:"sourceLabels,omitempty"`
+	Separator    string   `json:"separator,omitempty"`
+	TargetLabel  string   `json:"targetLabel,omitempty"`
+	Replacement  string   `json:"replacement,omitempty"`
+	Regex        string   `json:"regex,omitempty"`
+	Action       string   `json:"action,omitempty"`
 }
 
 // +kubebuilder:object:generate=true

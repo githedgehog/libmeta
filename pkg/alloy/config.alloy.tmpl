@@ -80,7 +80,7 @@ prometheus.exporter.unix "host" {
   ]
   {{ end }}
 }
-{{ end }}
+{{ end }}{{/* if unix */}}
 
 prometheus.scrape "{{ $name }}" {
   {{ if $scrape.IntervalSeconds }}scrape_interval = "{{ $scrape.IntervalSeconds }}s"{{ end }}
@@ -90,10 +90,33 @@ prometheus.scrape "{{ $name }}" {
   {{ if $scrape.Unix.Enable }}targets = prometheus.exporter.unix.host.targets{{ end }}
 
   forward_to = [
+    prometheus.relabel.{{ $name }},
+  ]
+}
+
+prometheus.relabel "{{ $name }}" {
+  forward_to = [
     {{ range $name, $target := $.Targets.Prometheus }}
     prometheus.remote_write.{{ $name }}.receiver,
     {{ end }}
   ]
+
+  {{ range $rule := $scrape.Relabel }}
+  rule {
+    {{ if len $rule.SourceLabels }}
+    source_labels = [
+      {{ range $label := $rule.SourceLabels }}
+      "{{ $label }}",
+      {{ end }}
+    ]
+    {{ end }}
+    {{ if $rule.Separator }}separator = "{{ $rule.Separator }}"{{ end }}
+    {{ if $rule.TargetLabel }}target_label = "{{ $rule.TargetLabel }}"{{ end }}
+    {{ if $rule.Replacement }}replacement = "{{ $rule.Replacement }}"{{ end }}
+    {{ if $rule.Regex }}regex = "{{ $rule.Regex }}"{{ end }}
+    {{ if $rule.Action }}action = "{{ $rule.Action }}"{{ end }}
+  }
+  {{ end }}{{/* range rules */}}
 }
 {{ end }}{{/* range scrapes */}}
 
@@ -178,7 +201,7 @@ loki.source.kubernetes "pod_logs" {
     {{ end }}
   ]
 }
-{{ end }}{{/* kube pod logs */}}
+{{ end }}{{/* if kube pod logs */}}
 
 {{ if $.Kube.Events }}
 loki.source.kubernetes_events "cluster_events" {
@@ -190,6 +213,6 @@ loki.source.kubernetes_events "cluster_events" {
     {{ end }}
   ]
 }
-{{ end }}{{/* kube events */}}
+{{ end }}{{/* if kube events */}}
 
 {{ end }}{{/* if loki targets */}}

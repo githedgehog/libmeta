@@ -72,15 +72,56 @@ prometheus.scrape "test_address" {
   scrape_interval = "42s"
   targets = [{ __address__ = "localhost:12345", }]
   forward_to = [
+    prometheus.relabel.test_address,
+  ]
+}
+prometheus.relabel "test_address" {
+  forward_to = [
     prometheus.remote_write.another.receiver,
     prometheus.remote_write.grafana_cloud.receiver,
     prometheus.remote_write.grafana_cloud_interval.receiver,
   ]
 }
+prometheus.scrape "test_relabel" {
+  scrape_interval = "42s"
+  targets = [{ __address__ = "localhost:12345", }]
+  forward_to = [
+    prometheus.relabel.test_relabel,
+  ]
+}
+prometheus.relabel "test_relabel" {
+  forward_to = [
+    prometheus.remote_write.another.receiver,
+    prometheus.remote_write.grafana_cloud.receiver,
+    prometheus.remote_write.grafana_cloud_interval.receiver,
+  ]
+  rule {
+    source_labels = [
+      "l1",
+      "l2",
+    ]
+    separator = ";"
+    target_label = "t1"
+    replacement = "$1"
+    regex = "r2"
+    action = "drop"
+  }
+  rule {
+    source_labels = [
+      "l1",
+    ]
+    action = "drop"
+  }
+}
 prometheus.exporter.self "alloy" {}
 prometheus.scrape "test_self" {
   scrape_interval = "43s"
   targets = prometheus.exporter.self.alloy.targets
+  forward_to = [
+    prometheus.relabel.test_self,
+  ]
+}
+prometheus.relabel "test_self" {
   forward_to = [
     prometheus.remote_write.another.receiver,
     prometheus.remote_write.grafana_cloud.receiver,
@@ -95,6 +136,11 @@ prometheus.exporter.unix "host" {
 prometheus.scrape "test_unix" {
   scrape_interval = "44s"
   targets = prometheus.exporter.unix.host.targets
+  forward_to = [
+    prometheus.relabel.test_unix,
+  ]
+}
+prometheus.relabel "test_unix" {
   forward_to = [
     prometheus.remote_write.another.receiver,
     prometheus.remote_write.grafana_cloud.receiver,
