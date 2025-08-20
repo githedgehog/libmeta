@@ -11,6 +11,7 @@ import (
 	"go.githedgehog.com/libmeta/pkg/tmpl"
 )
 
+// +kubebuilder:object:generate=true
 type Config struct {
 	Hostname string  `json:"hostname,omitempty"`
 	Targets  Targets `json:"targets,omitempty"`
@@ -21,6 +22,7 @@ type Config struct {
 	Kube     Kube              `json:"kube,omitempty"`
 }
 
+// +kubebuilder:object:generate=true
 type Scrape struct {
 	IntervalSeconds uint `json:"intervalSeconds,omitempty"`
 
@@ -29,15 +31,18 @@ type Scrape struct {
 	Unix    ScrapeUnix `json:"unix,omitempty"`
 }
 
+// +kubebuilder:object:generate=true
 type ScrapeSelf struct {
 	Enable bool `json:"enable,omitempty"`
 }
 
+// +kubebuilder:object:generate=true
 type ScrapeUnix struct {
 	Enable     bool     `json:"enable,omitempty"`
 	Collectors []string `json:"collectors,omitempty"`
 }
 
+// +kubebuilder:object:generate=true
 type Kube struct {
 	PodLogs bool `json:"podLogs,omitempty"`
 	Events  bool `json:"events,omitempty"`
