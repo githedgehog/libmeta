@@ -161,7 +161,7 @@ loki.source.file "syslog" {
   ]
 }
 loki.process "syslog" {
-  stage.labels {
+  stage.static_labels {
     values = {
       name = "syslog",
     }
@@ -186,7 +186,7 @@ loki.source.file "varlog" {
   ]
 }
 loki.process "varlog" {
-  stage.labels {
+  stage.static_labels {
     values = {
       name = "varlog",
     }

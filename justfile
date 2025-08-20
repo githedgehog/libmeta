@@ -37,5 +37,5 @@ _kube_gen:
 gen: _kube_gen
 
 # Update golden files
-test-update path="./...": gen
+test-update path="./...": gen && test
   UPDATE=true go test {{go_flags}} `go list {{path}} | grep -v /e2e`

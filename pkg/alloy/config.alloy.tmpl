@@ -145,7 +145,7 @@ loki.source.file "{{ $name }}" {
 }
 
 loki.process "{{ $name }}" {
-  stage.labels {
+  stage.static_labels {
     values = {
       name = "{{ $name }}",
     }
