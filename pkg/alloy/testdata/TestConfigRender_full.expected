@@ -169,11 +169,6 @@ loki.source.file "syslog" {
   ]
 }
 loki.process "syslog" {
-  stage.static_labels {
-    values = {
-      name = "syslog",
-    }
-  }
   forward_to = [
     loki.write.another.receiver,
     loki.write.grafana_cloud.receiver,
@@ -194,11 +189,6 @@ loki.source.file "varlog" {
   ]
 }
 loki.process "varlog" {
-  stage.static_labels {
-    values = {
-      name = "varlog",
-    }
-  }
   forward_to = [
     loki.write.another.receiver,
     loki.write.grafana_cloud.receiver,

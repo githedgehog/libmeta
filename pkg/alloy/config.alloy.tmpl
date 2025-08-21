@@ -157,11 +157,13 @@ loki.source.file "{{ $name }}" {
 }
 
 loki.process "{{ $name }}" {
+  {{/*
   stage.static_labels {
     values = {
       name = "{{ $name }}",
     }
   }
+  */}}
 
   forward_to = [
     {{ range $name, $target := $.Targets.Loki }}
