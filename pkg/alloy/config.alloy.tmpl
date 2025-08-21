@@ -102,7 +102,7 @@ prometheus.scrape "{{ $name }}" {
   {{ if $scrape.Unix.Enable }}targets = prometheus.exporter.unix.host.targets{{ end }}
 
   forward_to = [
-    prometheus.relabel.{{ $name }},
+    prometheus.relabel.{{ $name }}.receiver,
   ]
 }
 

@@ -80,7 +80,7 @@ prometheus.scrape "test_address" {
   scrape_interval = "42s"
   targets = [{ __address__ = "localhost:12345", }]
   forward_to = [
-    prometheus.relabel.test_address,
+    prometheus.relabel.test_address.receiver,
   ]
 }
 prometheus.relabel "test_address" {
@@ -94,7 +94,7 @@ prometheus.scrape "test_relabel" {
   scrape_interval = "42s"
   targets = [{ __address__ = "localhost:12345", }]
   forward_to = [
-    prometheus.relabel.test_relabel,
+    prometheus.relabel.test_relabel.receiver,
   ]
 }
 prometheus.relabel "test_relabel" {
@@ -126,7 +126,7 @@ prometheus.scrape "test_self" {
   scrape_interval = "43s"
   targets = prometheus.exporter.self.alloy.targets
   forward_to = [
-    prometheus.relabel.test_self,
+    prometheus.relabel.test_self.receiver,
   ]
 }
 prometheus.relabel "test_self" {
@@ -145,7 +145,7 @@ prometheus.scrape "test_unix" {
   scrape_interval = "44s"
   targets = prometheus.exporter.unix.host.targets
   forward_to = [
-    prometheus.relabel.test_unix,
+    prometheus.relabel.test_unix.receiver,
   ]
 }
 prometheus.relabel "test_unix" {
