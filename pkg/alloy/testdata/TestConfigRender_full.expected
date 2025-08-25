@@ -3,6 +3,10 @@ logging {
     format = "logfmt"
     write_to = [
       loki.write.another.receiver,
+      loki.write.basic_empty.receiver,
+      loki.write.basic_nil.receiver,
+      loki.write.basic_no_password.receiver,
+      loki.write.basic_no_username.receiver,
       loki.write.grafana_cloud.receiver,
     ]
 }
@@ -12,6 +16,52 @@ prometheus.remote_write "another" {
     bearer_token = "secret"
     tls_config {
       insecure_skip_verify = true
+    }
+  }
+  external_labels = {
+  }
+}
+prometheus.remote_write "basic_empty" {
+  endpoint {
+    url = "https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom/push"
+    tls_config {
+      insecure_skip_verify = false
+    }
+  }
+  external_labels = {
+  }
+}
+prometheus.remote_write "basic_nil" {
+  endpoint {
+    url = "https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom/push"
+    tls_config {
+      insecure_skip_verify = false
+    }
+  }
+  external_labels = {
+  }
+}
+prometheus.remote_write "basic_no_password" {
+  endpoint {
+    url = "https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom/push"
+    basic_auth {
+      username = "username"
+    }
+    tls_config {
+      insecure_skip_verify = false
+    }
+  }
+  external_labels = {
+  }
+}
+prometheus.remote_write "basic_no_username" {
+  endpoint {
+    url = "https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom/push"
+    basic_auth {
+      password = "password"
+    }
+    tls_config {
+      insecure_skip_verify = false
     }
   }
   external_labels = {
@@ -61,6 +111,52 @@ loki.write "another" {
   external_labels = {
   }
 }
+loki.write "basic_empty" {
+  endpoint {
+    url = "https://another.com/loki/push"
+    tls_config {
+      insecure_skip_verify = true
+    }
+  }
+  external_labels = {
+  }
+}
+loki.write "basic_nil" {
+  endpoint {
+    url = "https://another.com/loki/push"
+    tls_config {
+      insecure_skip_verify = true
+    }
+  }
+  external_labels = {
+  }
+}
+loki.write "basic_no_password" {
+  endpoint {
+    url = "https://another.com/loki/push"
+    basic_auth {
+      username = "username"
+    }
+    tls_config {
+      insecure_skip_verify = true
+    }
+  }
+  external_labels = {
+  }
+}
+loki.write "basic_no_username" {
+  endpoint {
+    url = "https://another.com/loki/push"
+    basic_auth {
+      password = "password"
+    }
+    tls_config {
+      insecure_skip_verify = true
+    }
+  }
+  external_labels = {
+  }
+}
 loki.write "grafana_cloud" {
   endpoint {
     url = "https://logs-prod-021.grafana.net/loki/api/v1/push"
@@ -86,6 +182,10 @@ prometheus.scrape "test_address" {
 prometheus.relabel "test_address" {
   forward_to = [
     prometheus.remote_write.another.receiver,
+    prometheus.remote_write.basic_empty.receiver,
+    prometheus.remote_write.basic_nil.receiver,
+    prometheus.remote_write.basic_no_password.receiver,
+    prometheus.remote_write.basic_no_username.receiver,
     prometheus.remote_write.grafana_cloud.receiver,
     prometheus.remote_write.grafana_cloud_interval.receiver,
   ]
@@ -100,6 +200,10 @@ prometheus.scrape "test_relabel" {
 prometheus.relabel "test_relabel" {
   forward_to = [
     prometheus.remote_write.another.receiver,
+    prometheus.remote_write.basic_empty.receiver,
+    prometheus.remote_write.basic_nil.receiver,
+    prometheus.remote_write.basic_no_password.receiver,
+    prometheus.remote_write.basic_no_username.receiver,
     prometheus.remote_write.grafana_cloud.receiver,
     prometheus.remote_write.grafana_cloud_interval.receiver,
   ]
@@ -132,6 +236,10 @@ prometheus.scrape "test_self" {
 prometheus.relabel "test_self" {
   forward_to = [
     prometheus.remote_write.another.receiver,
+    prometheus.remote_write.basic_empty.receiver,
+    prometheus.remote_write.basic_nil.receiver,
+    prometheus.remote_write.basic_no_password.receiver,
+    prometheus.remote_write.basic_no_username.receiver,
     prometheus.remote_write.grafana_cloud.receiver,
     prometheus.remote_write.grafana_cloud_interval.receiver,
   ]
@@ -151,6 +259,10 @@ prometheus.scrape "test_unix" {
 prometheus.relabel "test_unix" {
   forward_to = [
     prometheus.remote_write.another.receiver,
+    prometheus.remote_write.basic_empty.receiver,
+    prometheus.remote_write.basic_nil.receiver,
+    prometheus.remote_write.basic_no_password.receiver,
+    prometheus.remote_write.basic_no_username.receiver,
     prometheus.remote_write.grafana_cloud.receiver,
     prometheus.remote_write.grafana_cloud_interval.receiver,
   ]
@@ -171,6 +283,10 @@ loki.source.file "syslog" {
 loki.process "syslog" {
   forward_to = [
     loki.write.another.receiver,
+    loki.write.basic_empty.receiver,
+    loki.write.basic_nil.receiver,
+    loki.write.basic_no_password.receiver,
+    loki.write.basic_no_username.receiver,
     loki.write.grafana_cloud.receiver,
   ]
 }
@@ -191,6 +307,10 @@ loki.source.file "varlog" {
 loki.process "varlog" {
   forward_to = [
     loki.write.another.receiver,
+    loki.write.basic_empty.receiver,
+    loki.write.basic_nil.receiver,
+    loki.write.basic_no_password.receiver,
+    loki.write.basic_no_username.receiver,
     loki.write.grafana_cloud.receiver,
   ]
 }
@@ -238,6 +358,10 @@ loki.source.kubernetes "pod_logs" {
   targets    = discovery.relabel.pod_logs.output
   forward_to = [
     loki.write.another.receiver,
+    loki.write.basic_empty.receiver,
+    loki.write.basic_nil.receiver,
+    loki.write.basic_no_password.receiver,
+    loki.write.basic_no_username.receiver,
     loki.write.grafana_cloud.receiver,
   ]
 }
@@ -246,6 +370,10 @@ loki.source.kubernetes_events "cluster_events" {
   log_format = "logfmt"
   forward_to = [
     loki.write.another.receiver,
+    loki.write.basic_empty.receiver,
+    loki.write.basic_nil.receiver,
+    loki.write.basic_no_password.receiver,
+    loki.write.basic_no_username.receiver,
     loki.write.grafana_cloud.receiver,
   ]
 }

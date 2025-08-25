@@ -188,6 +188,33 @@ func TestConfigRender(t *testing.T) {
 								InsecureSkipVerify: true,
 							},
 						},
+						"basic_nil": {
+							Target: alloy.Target{
+								URL: "https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom/push",
+							},
+						},
+						"basic_empty": {
+							Target: alloy.Target{
+								URL:       "https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom/push",
+								BasicAuth: &alloy.TargetBasicAuth{},
+							},
+						},
+						"basic_no_username": {
+							Target: alloy.Target{
+								URL: "https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom/push",
+								BasicAuth: &alloy.TargetBasicAuth{
+									Password: "password",
+								},
+							},
+						},
+						"basic_no_password": {
+							Target: alloy.Target{
+								URL: "https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom/push",
+								BasicAuth: &alloy.TargetBasicAuth{
+									Username: "username",
+								},
+							},
+						},
 					},
 					Loki: map[string]alloy.LokiTarget{
 						"grafana_cloud": {
@@ -206,6 +233,37 @@ func TestConfigRender(t *testing.T) {
 							Target: alloy.Target{
 								URL:                "https://another.com/loki/push",
 								BearerToken:        "secret",
+								InsecureSkipVerify: true,
+							},
+						},
+						"basic_nil": {
+							Target: alloy.Target{
+								URL:                "https://another.com/loki/push",
+								InsecureSkipVerify: true,
+							},
+						},
+						"basic_empty": {
+							Target: alloy.Target{
+								URL:                "https://another.com/loki/push",
+								BasicAuth:          &alloy.TargetBasicAuth{},
+								InsecureSkipVerify: true,
+							},
+						},
+						"basic_no_username": {
+							Target: alloy.Target{
+								URL: "https://another.com/loki/push",
+								BasicAuth: &alloy.TargetBasicAuth{
+									Password: "password",
+								},
+								InsecureSkipVerify: true,
+							},
+						},
+						"basic_no_password": {
+							Target: alloy.Target{
+								URL: "https://another.com/loki/push",
+								BasicAuth: &alloy.TargetBasicAuth{
+									Username: "username",
+								},
 								InsecureSkipVerify: true,
 							},
 						},
