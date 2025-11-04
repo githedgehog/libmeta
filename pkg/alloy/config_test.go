@@ -268,6 +268,20 @@ func TestConfigRender(t *testing.T) {
 							},
 						},
 					},
+					Pyroscope: map[string]alloy.PyroscopeTarget{
+						"grafana_cloud": {
+							Target: alloy.Target{
+								URL: "https://profiles-prod-008.grafana.net",
+								BasicAuth: &alloy.TargetBasicAuth{
+									Username: "username",
+									Password: "password",
+								},
+								Labels: map[string]string{
+									"a": "b",
+								},
+							},
+						},
+					},
 				},
 				Scrapes: map[string]alloy.Scrape{
 					"test_address": {
@@ -326,6 +340,9 @@ func TestConfigRender(t *testing.T) {
 				Kube: alloy.Kube{
 					PodLogs: true,
 					Events:  true,
+				},
+				Pyroscope: alloy.Pyroscope{
+					Enable: true,
 				},
 			},
 		},

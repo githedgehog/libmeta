@@ -172,6 +172,21 @@ loki.write "grafana_cloud" {
     a = "b",
   }
 }
+pyroscope.write "grafana_cloud" {
+  endpoint {
+    url = "https://profiles-prod-008.grafana.net"
+    basic_auth {
+      username = "username"
+      password = "password"
+    }
+    tls_config {
+      insecure_skip_verify = false
+    }
+  }
+  external_labels = {
+    a = "b",
+  }
+}
 prometheus.scrape "test_address" {
   scrape_interval = "42s"
   targets = [{ __address__ = "localhost:12345", }]
@@ -368,5 +383,14 @@ loki.source.kubernetes_events "cluster_events" {
     loki.write.basic_no_password.receiver,
     loki.write.basic_no_username.receiver,
     loki.write.grafana_cloud.receiver,
+  ]
+}
+pyroscope.receive_http "profiling" {
+  http {
+    listen_address = "0.0.0.0"
+    listen_port = 4040
+  }
+  forward_to = [
+    pyroscope.write.grafana_cloud.receiver,
   ]
 }
