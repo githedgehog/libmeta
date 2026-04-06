@@ -51,7 +51,7 @@ jobs:
           cache: false
 
       - name: Setup Just
-        uses: extractions/setup-just@v3
+        uses: extractions/setup-just@v4
 
       - name: Lint and generate code
         run: |
